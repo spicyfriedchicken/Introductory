@@ -62,18 +62,19 @@ std::string readFileContent(const std::string& filePath) {
     return buffer.str();
 }
 
-std::vector<std::string> tokenize(const std::string& text) {
-    std::vector<std::string> tokens;
-    std::string current;
+std::vector<std::string> tokenize(const std::string content) {
+    if (content.empty()) return "";
+    vector<std::string> tokens;
+    std::string temporary;
 
-    for (char c : text) {
-        if (isalnum(c)) current += std::tolower(c);
-        else if (!current.empty()) {
-            tokens.push_back(current);
-            current.clear();
+    for (const auto& c : content) {
+        if (isalnum(c)) temporary += to_lower(c);
+        else if (!temporary.empty()) {
+            tokens.push_back(temporary);
+            temporary.clear();
         }
     }
-    if (!current.empty()) tokens.push_back(current);
+    if (!temporary.empty()) tokens.push_back(temporary);
     return tokens;
 }
 
@@ -90,4 +91,5 @@ int main() {
     }
 
     tdm.printMatrixToFile("TDM.txt");
+
 }
