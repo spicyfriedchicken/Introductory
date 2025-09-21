@@ -1,45 +1,49 @@
-#include <iostream>
+#pragma once
+#include <ostream>
+#include <cmath>
 
-struct Point {
-    int x_, y_;
-    Point() = default;
-    Point (int x, int y) : x_(x), y_(y) {}
-    Point (const Point&) = default;
-    Point (Point&&) = default;
+    class Point2D {
+    public:
+        constexpr Point2D() noexcept = default;
+        constexpr Point2D(double x, double y) noexcept : x_(x), y_(y) {}
 
-   Point operator+(const Point& other) const {
-        return Point(x_ + other.x, y_ + other.y);
-   }
+        constexpr Point2D& operator=(const Point2D&) noexcept = default;
+        constexpr Point2D(const Point2D&) noexcept = default;
+        constexpr Point2D(Point2D&&) noexcept = default;
+        constexpr Point2D& operator=(Point2D&&) noexcept = default;
+        ~Point2D() = default;
 
-    Point operator-(const Point& other) const {
-       return Point(x_ - other.x, y_ - other.y);
-   }
-    bool operator==(const Point& other) const {
-        return (other.x == x_ && other.y == y_);
+
+        [[nodiscard]] double distance_to_euclidean(const Point2D& a) const noexcept {
+            return std::hypot(a.x_ - x_, a.y_ - y_);
+        }
+        constexpr double x() const noexcept { return x_; }
+        constexpr double y() const noexcept { return y_; }
+
+    private:
+        double x_{0.0}, y_{0.0};
+    };
+
+
+    inline double distance_to_euclidean(const Point2D& a, const Point2D& b) noexcept {
+            return a.distance_to_euclidean(b);
     }
-
-};
-
-Point add(const Point* a, const Point* b) {
-    return Point(a->x_ + b->x_, a->y_ + b->y_);
-}
-
-Point subtract(const Point* a, const Point* b) {
-    return Point(a->x_ - b->x_, a->y_ - b->y_);
-}
-
-Point multiply(const Point* a, const Point* b) {
-    return Point(a->x_ * b->x_, a->y_ * b->y_);
-}
-
-Point divide(const Point* a, const Point* b) {
-    if (b->x == 0 || b->y == 0) {
-        std::cerr << "Cannot divide by zero!" << std::endl;
-        return Point(0,0);
+    inline std::ostream& operator<<(std::ostream& os, const Point2D& rhs) {
+        return os << "(" << rhs.x_ << "," << rhs.y_ << ")\n";
     }
-    return Point(a->x_ / b->x_, a->y_ / b->y_);
-}
-
-std::ostream& operator<<(std::ostream& os, const Point& other) {
-    return os << "(" << other.x << "," << other.y << ")";
-}
+    constexpr Point2D operator+(const Point2D& a, const Point2D& b) {
+        return {a.x() + b.x(), a.y() + b.y()};
+    }
+    constexpr Point2D operator-(const Point2D& a, const Point2D& b) {
+        return {a.x() - b.x(), a.y() - b.y()};
+    }
+    constexpr Point2D operator==(const Point2D& a, const Point2D& b) {
+        return {a.x() == b.x() && a.y() == b.y()};
+    }
+    constexpr bool operator<(const Point2D& a, const Point2D& b) {
+        return (a.x() < b.x()) || (a.x() == b.x() && a.y() < b.y());
+    }
+    constexpr bool operator!=(const Point2D& a, const Point2D& b) noexcept { return !(a == b); }
+    constexpr bool operator>(const Point2D& a, const Point2D& b) noexcept  { return b < a; }
+    constexpr bool operator<=(const Point2D& a, const Point2D& b) noexcept { return !(b < a); }
+    constexpr bool operator>=(const Point2D& a, const Point2D& b) noexcept { return !(a < b); }
