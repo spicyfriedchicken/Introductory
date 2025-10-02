@@ -1,4 +1,0 @@
-/Users/oscarabreu/Code/Misc/CMake/build/CMakeFiles/mathlib.dir
-/Users/oscarabreu/Code/Misc/CMake/build/CMakeFiles/main.dir
-/Users/oscarabreu/Code/Misc/CMake/build/CMakeFiles/edit_cache.dir
-/Users/oscarabreu/Code/Misc/CMake/build/CMakeFiles/rebuild_cache.dir

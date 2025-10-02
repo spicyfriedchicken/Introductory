@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -8,53 +9,9 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <system_error>
 #include <unistd.h>
 #include <expected>
 #include <fcntl.h>
-
-enum class ConnectionState : uint8_t {
-    Request,
-    Response,
-    End
-};
-template<typename T>
-struct Socket {
-    int fd_{-1};
-
-    explicit Socket(int fd) : fd_(fd) {}
-    Socket(const Socket&) = delete;
-    Socket& operator=(const Socket&) = delete;
-    Socket(Socket&& a) noexcept : fd_(a.fd_) {a.fd_ = -1;}
-    Socket& operator=(Socket&& a) {
-        if (this != a) {
-            if (fd_ != -1) ::close(fd_);
-            fd_ = a.fd_;
-            a.fd_ = -1;
-        }
-        return *this;
-    }
-
-    std::expected<T, std::error_code> set_nonblocking() const {
-        int flag = fcntl(fd_, F_GETFL, 0);
-        if (flag == -1) return std::unexpected(std::make_error_code(static_cast<std::errc>(errno)));
-        flag |= O_NONBLOCK // non-blocking socket
-        if (fcntl(fd_, F_SETFL, flag) == -1) return std::unexpected(std::make_error_code(static_cast<std::errc>(errno)));
-        return {];
-    }
-
-    ~Socket() {
-        if (fd_ != -1) ::close(fd_);
-    }
-};
-
-class Connection {
-private:
-Socket socket_ = {-1};
-ConnectionState state_;
-std::vector<uint8_t> rbuf_, wbuf_;
-
-};
 
 int main(int argc, char* argv[]) {
 

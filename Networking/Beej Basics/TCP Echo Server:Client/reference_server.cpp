@@ -5,6 +5,16 @@
 #include <cstring>        // std::memset
 #include <cstdio>         // std::perror (optional error printing)
 
+// Steps to crete a TCP Echo Server
+// 1. Initialize the Socket with socket(), input ipv4 and TCP protocols
+// 2. use setsockopt to set SO_REUSEADDR just so we can reuse which ever address is assigned to us
+// 3. set dummy sockaddr_in struct, you can do it manually or use getaddrinfo
+// 4. Bind() the socket using the dummy as hint
+// 5. Call Listen(), SOMAXCONN probes your OS to get the # of maximum connections possible on a listening port
+// 6. Create Client socket using sockaddr_in too, and call accept() to accept the client
+// 7. Create a buffer and call read/recv()
+// 8. Call send() back to the client with buffer's contents
+
 int main() {
     // create a new socket: IPv4 (AF_INET), TCP (SOCK_STREAM), protocol 0 = default
     int srv_fd = socket(AF_INET, SOCK_STREAM, 0);
